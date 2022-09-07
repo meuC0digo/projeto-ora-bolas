@@ -1,0 +1,13 @@
+LINGUAGEM:
+
+Python com bibliotecas mathplotlib e tkinter
+
+EQUAÇÕES E LÓGICA:
+
+encontrar o tempo cuja a posição no eixo x e y da bola retorne um vetor de aceleração dado por 
+(ax = a*cos0; ay = a*sen0)
+com o qual o robô possa só andar em linha reta, realizando a menor trajetória possível
+
+RAIO DE INTERCEPTAÇÃO:
+
+
