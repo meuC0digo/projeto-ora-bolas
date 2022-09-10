@@ -197,8 +197,8 @@ while True:
             pygame.quit()
             exit()
     
-    des_robo = pygame.draw.rect(tela, (255,0,0), (100*posx_robo[robo.i], 100*posy_robo[robo.i], 15, 15))
-    des_bola = pygame.draw.rect(tela, (0,255,0), (100*pos_x[robo.i], 100*pos_y[robo.i], 10, 10))
+    des_robo = pygame.draw.rect(tela, (255,0,0), (100*posx_robo[robo.i], -100*posy_robo[robo.i]+altura, 15, 15))
+    des_bola = pygame.draw.rect(tela, (0,255,0), (100*pos_x[robo.i], -100*pos_y[robo.i]+altura, 10, 10))
 
     robo.i+=1
     pygame.display.update()
