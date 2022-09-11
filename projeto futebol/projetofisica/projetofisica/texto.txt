@@ -1,0 +1,4 @@
+
+
+Esse é um novo arquivo que foi adicionado com o comando Commit e Add através do CMD com Git
+
