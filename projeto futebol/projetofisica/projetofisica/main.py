@@ -11,7 +11,6 @@ from sys import exit
 
 # Criação de classes e funções #
 
-#Testando Commit com Git#
 
 
 class Robo:
@@ -91,6 +90,30 @@ class Robo:
         self.posx += self.velx
         self.posy += self.vely
 
+def anim():
+    pygame.init()
+    largura = 1000
+    altura = 600
+
+    tela = pygame.display.set_mode((largura, altura))
+    relogio = pygame.time.Clock()
+
+    while True:
+        if robo.i >= len(posx_robo)-1:
+            break
+        relogio.tick(60)
+        tela.fill((255,255,255))
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+        
+        des_robo = pygame.draw.rect(tela, (255,0,0), (100*posx_robo[robo.i], -100*posy_robo[robo.i]+altura, (180/1000)*100, (180/1000)*100))
+        des_bola = pygame.draw.rect(tela, (0,255,0), (100*pos_x[robo.i], -100*pos_y[robo.i]+altura, (21/1000)*500, (21/1000)*500))
+
+        robo.i+=1
+        pygame.display.update()
+
 
 
 def grafico1():
@@ -98,14 +121,20 @@ def grafico1():
 
 
 def grafico2():
-    Robo.grafico(tempo, pos_x, "V(x) da Bola", 'blue')
+    Robo.grafico(tempo, pos_x, "Posição(x) da Bola", 'blue')
 
 
 def grafico3():
-    Robo.grafico(tempo, pos_y, "V(y) da Bola", 'green')
+    Robo.grafico(tempo, pos_y, "Posição(y) da Bola", 'green')
 
 def grafico4():
     Robo.grafico(posx_robo, posy_robo, "Trajetoria do robo", 'purple')
+
+def grafico5():
+    Robo.grafico(tempo_robo, posx_robo, "Posição(x) do Robô", 'red')
+
+def grafico6():
+    Robo.grafico(tempo_robo, posy_robo, "Posição(y) do Robo", 'green')
 
 
 # Criação da Janela + Interface #
@@ -120,16 +149,26 @@ janela.geometry("800x600")
 # campo_pos.place(relx=0.5, rely=0.93, anchor=CENTER)
 
 botao1 = Button(janela, text="Gráfico da Trajetória", width=14, bg="red", fg='white', command=grafico1)
-botao1.place(anchor=CENTER, relx=0.2, rely=0.05)
+botao1.place(anchor=CENTER, relx=0.1, rely=0.05)
 
-botao2 = Button(janela, text="Gráfico de V(x)", width=14, bg="blue", fg='white', command=grafico2)
-botao2.place(anchor=CENTER, relx=0.5, rely=0.05)
+botao2 = Button(janela, text="Pos(x) da bola", width=14, bg="blue", fg='white', command=grafico2)
+botao2.place(anchor=CENTER, relx=0.25, rely=0.05)
 
-botao3 = Button(janela, text="Gráfico de V(y)", width=14, bg="green", fg='white', command=grafico3)
-botao3.place(anchor=CENTER, relx=0.8, rely=0.05)
+botao3 = Button(janela, text="Pos(y) da bola", width=14, bg="green", fg='white', command=grafico3)
+botao3.place(anchor=CENTER, relx=0.4, rely=0.05)
 
 botao4 = Button(janela, text="Trajetoria robo", width=14, bg="purple", fg="white", command=grafico4)
-botao4.place(anchor=CENTER, relx=0.65, rely=0.05)
+botao4.place(anchor=CENTER, relx=0.55, rely=0.05)
+
+botao5 = Button(janela, text="Pos(x) do Robo", width=14, bg="purple", fg="white", command=grafico5)
+botao5.place(anchor=CENTER, relx=0.7, rely=0.05)
+
+botao6 = Button(janela, text="Pos(y) do robo", width=14, bg="purple", fg="white", command=grafico6)
+botao6.place(anchor=CENTER, relx=0.85, rely=0.05)
+
+botao7 = Button(janela, text="Animacao", width=14, bg="purple", fg="white", command=anim)
+botao7.place(anchor=CENTER, relx=0.5, rely= 0.5)
+
 
 # Código (Lógica) responsável pelos dados #
 
@@ -138,6 +177,7 @@ lista_pos = []
 pos_x = []
 pos_y = []
 tempo = []
+tempo_robo = []
 
 for line in trajetoria:
     linha = line.replace("\t"," ").replace("\n"," ").replace(",", ".")
@@ -158,7 +198,7 @@ trajetoria.close()
 
 
 #CRIACAO DO ROBO
-robo = Robo(2, 6)
+robo = Robo(1, 5)
 
 posx_robo = []
 posy_robo = []
@@ -167,11 +207,12 @@ posy_robo = []
 while True:
     posx_robo.append(robo.posx)
     posy_robo.append(robo.posy)
+    tempo_robo.append(tempo[robo.i])
     
     robo.perseguir()
     robo.i+=1
     
-    if ((abs(pos_x[robo.i] - robo.posx) ==0) and (abs(pos_y[robo.i] - robo.posy) ==0)):
+    if ((robo.posx + 0.09 >= pos_x[robo.i]-(21/2000) and robo.posx - 0.09 <= pos_x[robo.i]+(21/2000)) and (robo.posy + 0.09 >= pos_y[robo.i]-(21/2000) and robo.posy - 0.09 <= pos_y[robo.i]+(21/2000))):
         break
 
     if robo.i >= len(pos_x)-1:
@@ -180,29 +221,12 @@ while True:
 # for line in lista_pos:
 #     campo_pos.insert(INSERT, line)
 
-print(robo.posx, robo.posy, pos_x[robo.i], pos_y[robo.i], robo.i)
-pygame.init()
-largura = 1000
-altura = 600
+print(robo.posx, robo.posy, pos_x[robo.i], pos_y[robo.i], tempo[robo.i], robo.velx, robo.vely)
 
-tela = pygame.display.set_mode((largura, altura))
-relogio = pygame.time.Clock()
 robo.i = 0
-while True:
-    if robo.i >= len(posx_robo)-1:
-        break
-    relogio.tick(60)
-    tela.fill((255,255,255))
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            exit()
-    
-    des_robo = pygame.draw.rect(tela, (255,0,0), (100*posx_robo[robo.i], -100*posy_robo[robo.i]+altura, 15, 15))
-    des_bola = pygame.draw.rect(tela, (0,255,0), (100*pos_x[robo.i], -100*pos_y[robo.i]+altura, 10, 10))
 
-    robo.i+=1
-    pygame.display.update()
+
+
 
 
 janela.mainloop()
